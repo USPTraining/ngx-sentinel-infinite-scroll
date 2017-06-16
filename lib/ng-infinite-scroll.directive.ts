@@ -13,7 +13,7 @@ import {
   selector: '[infiniteScroll]'
 })
 export class InfiniteScroll implements AfterViewInit, OnDestroy {
-  @Input() sentinelPosition: number;
+  @Input() sentinelPosition: number = 0;
   @Input() observedElementClassName: string;
   @Input() loadingIndicationElement: HTMLElement;
   @Output() loadMore: EventEmitter<void> = new EventEmitter<void>();
@@ -136,7 +136,6 @@ export class InfiniteScroll implements AfterViewInit, OnDestroy {
    * Checks if the required attributes are set.
    */
   private checkRequiredAttributes(): void {
-    if (!this.sentinelPosition) throw new Error('Attribute "sentinelPosition" is required');
     if (!this.observedElementClassName) throw new Error('Attribute "observedElementClassName" is required');
   }
 
