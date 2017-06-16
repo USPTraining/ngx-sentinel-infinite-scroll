@@ -128,7 +128,6 @@ export class InfiniteScroll implements AfterViewInit, OnDestroy {
 
     let observedElementIndex =
       (elements.length < this.sentinelPosition) ? elements.length - 1 : elements.length - this.sentinelPosition;
-    observedElementIndex = observedElementIndex > 0 ? observedElementIndex : elements.length - 1;
     return elements[observedElementIndex];
   }
 
@@ -136,7 +135,8 @@ export class InfiniteScroll implements AfterViewInit, OnDestroy {
    * Checks if the required attributes are set.
    */
   private checkRequiredAttributes(): void {
-    if (!this.observedElementClassName) throw new Error('Attribute "observedElementClassName" is required');
+    if (!this.observedElementClassName) throw new Error('Attribute "observedElementClassName" is required.');
+    if (this.sentinelPosition < 0) throw new Error('Attribute "sentinelPosition" should be a positive integer.');
   }
 
   /**
