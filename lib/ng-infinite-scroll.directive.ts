@@ -15,7 +15,7 @@ import {
 export class InfiniteScroll implements AfterViewInit, OnDestroy {
   @Input() sentinelPosition: number;
   @Input() observedElementClassName: string;
-  @Input() loadingIndicationElement: string;
+  @Input() loadingIndicationElement: HTMLElement;
   @Output() loadMore: EventEmitter<void> = new EventEmitter<void>();
 
   private intersectionObserver: IntersectionObserver;

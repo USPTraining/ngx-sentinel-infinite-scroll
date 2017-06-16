@@ -5,7 +5,7 @@ import { InfiniteScroll } from '../../lib/ng-infinite-scroll.directive';
 @Component({
   selector: 'app',
   template: `
-    <h1>Angular2 Sentinel Infinite Scroll Demo</h1>
+    <h1>Angular (2 and beyond) Infinite Scroll Demo</h1>
     <div class="items-container" infiniteScroll 
     [loadingIndicationElement]="loadingIndicationElement" [sentinelPosition]="20" [observedElementClassName]="'item'"
     (loadMore)="loadMore()">  
