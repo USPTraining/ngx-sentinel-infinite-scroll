@@ -28,7 +28,7 @@ By default, the directive will detect sentinel intersection with **viewport**.
 * set css "overflow-y" value to "scroll" of the host element
 * set an explict css "height" value to the host element
 
-# Usage
+# Integration and Usage
 First, import the InfiniteScrollModule to your module:
 
 ```typescript
@@ -36,7 +36,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { DemoComponent } from './demo.component';
 
-import { NgInfiniteScrollModule } from '../../lib/ng-infinite-scroll.module';
+import { NgInfiniteScrollModule } from 'ngx-sentinel-infinite-scroll';
 
 @NgModule({
   imports: [NgInfiniteScrollModule, BrowserModule],
@@ -65,36 +65,6 @@ export class DemoComponent implements OnInit {
   loadMore() {
     console.log('Loading more data');
   }
-```
-
-# Integration
-
-Should work out of the box with webpack, respectively angular-cli. All you need to do is to include `NgInfiniteScrollModule`:
-
-```ts
-import { NgInfiniteScrollModule } from 'ngx-sentinel-infinite-scroll';
-
-@NgModule({
-  imports: [NgInfiniteScrollModule],
-  ...
-})
-class AppModule {}
-```
-
-## Angular Seed
-
-```ts
-// tools/config/project.ts
-
-...
-// Add packages (e.g. ngresizable)
-let additionalPackages: ExtendPackages[] = [{
-  name: 'ngx-sentinel-infinite-scroll',
-  path: 'node_modules/ngx-sentinel-infinite-scroll/ngx-sentinel-infinite-scroll.bundle.js'
-}];
-
-this.addPackagesBundles(additionalPackages);
-...
 ```
 
 # License
