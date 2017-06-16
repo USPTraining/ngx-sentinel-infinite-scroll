@@ -6,7 +6,7 @@ import {
   Input,
   OnDestroy,
   Output,
-  Renderer
+  Renderer2
 } from '@angular/core';
 
 @Directive({
@@ -14,21 +14,21 @@ import {
 })
 export class InfiniteScroll implements AfterViewInit, OnDestroy {
   @Input() sentinelPosition: number;
-  @Input() scrollWindow: boolean = true;
   @Input() observedElementClassName: string;
+  @Input() loadingIndicationElement: string;
   @Output() loadMore: EventEmitter<void> = new EventEmitter<void>();
 
   private intersectionObserver: IntersectionObserver;
   private mutationObserver: MutationObserver;
 
   private observedElement: any;
-  private loadingIndicationElement: any;
   private isLoading: boolean = false;
   private shouldEnableIntersectionObserver: boolean = false;
+  private readonly INTERSECTION_THRESHOLD: number = 0.1;
 
   constructor(
     public hostElement: ElementRef,
-    public renderer: Renderer
+    public renderer: Renderer2
   ) { }
 
   ngAfterViewInit() {
@@ -40,6 +40,7 @@ export class InfiniteScroll implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.disable();
+    this.mutationObserver.disconnect();
   }
 
   /**
@@ -69,14 +70,9 @@ export class InfiniteScroll implements AfterViewInit, OnDestroy {
    * Enables InfiniteScroll component.
    */
   enable(): void {
-    let options: any = { threshold: 0.1 };
-    if (!this.scrollWindow) {
-      options.root = this.hostElement.nativeElement;
-    }
-
     this.intersectionObserver = new IntersectionObserver(
       this.checkIntersection.bind(this),
-      options
+      { threshold: this.INTERSECTION_THRESHOLD }
     );
     this.startObserver();
   }
@@ -85,24 +81,24 @@ export class InfiniteScroll implements AfterViewInit, OnDestroy {
    * Add loading indication.
    */
   private appendLoadingIndication(): void {
-    this.loadingIndicationElement = this.renderer.createElement(this.hostElement.nativeElement, 'div');
-    this.renderer.setElementStyle(this.loadingIndicationElement, 'width', '100%');
-    this.renderer.setElementStyle(this.loadingIndicationElement, 'height', '10px');
-    this.renderer.setElementStyle(this.loadingIndicationElement, 'border', '1px solid red');
+    if (!this.loadingIndicationElement) return;
+    this.renderer.appendChild(this.hostElement.nativeElement, this.loadingIndicationElement);
   }
 
   /**
    * Shows loading indication element.
    */
   private showLoadingIndicationElement(): void {
-    this.renderer.setElementStyle(this.loadingIndicationElement, 'visibility', 'visible');
+    if (!this.loadingIndicationElement) return;
+    this.renderer.setStyle(this.loadingIndicationElement, 'visibility', 'visible');
   }
 
   /**
    * Hides loading indication element.
    */
   private hideLoadingIndicationElement(): void {
-    this.renderer.setElementStyle(this.loadingIndicationElement, 'visibility', 'hidden');
+    if (!this.loadingIndicationElement) return;
+    this.renderer.setStyle(this.loadingIndicationElement, 'visibility', 'hidden');
   }
 
   /**
@@ -149,13 +145,14 @@ export class InfiniteScroll implements AfterViewInit, OnDestroy {
    */
   private checkIntersection(data: any[]): void {
     if (this.isLoading) return;
-    let isVisible = false;
-    data.forEach((element: any) => {
-      if (element.intersectionRatio > 0) {
+
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].intersectionRatio > this.INTERSECTION_THRESHOLD) {
         this.isLoading = true;
         this.loadMore.next();
         this.showLoadingIndicationElement();
+        return;
       }
-    });
+    }
   }
 }

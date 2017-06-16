@@ -1,11 +1,13 @@
-import { Component, NgZone, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, NgZone, Renderer2, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 
 import { InfiniteScroll } from '../../lib/ng-infinite-scroll.directive';
 
 @Component({
   selector: 'app',
   template: `
-    <div class="items-container" infiniteScroll [scrollWindow]="true" [sentinelPosition]="20" [observedElementClassName]="'item'"
+    <h1>Angular2 Sentinel Infinite Scroll Demo</h1>
+    <div class="items-container" infiniteScroll 
+    [loadingIndicationElement]="loadingIndicationElement" [sentinelPosition]="20" [observedElementClassName]="'item'"
     (loadMore)="loadMore()">  
       <div class="item" *ngFor="let item of items">
         {{item.text}}
@@ -15,11 +17,12 @@ import { InfiniteScroll } from '../../lib/ng-infinite-scroll.directive';
   styles: [
     `
       .items-container {
-        width: 200px;
-        height: 300px;
+        width: 300px;
+        height: 500px;
         position: relative;
         top: 100px;
         left: 50px;
+        overflow-y: scroll;
       }
 
       .item {
@@ -35,9 +38,14 @@ import { InfiniteScroll } from '../../lib/ng-infinite-scroll.directive';
 })
 export class DemoComponent implements AfterViewInit {
   @ViewChild(InfiniteScroll) infiniteScroll: InfiniteScroll;
+  loadingIndicationElement: Element;
   items: { text: string }[];
 
-  constructor(public zone: NgZone) { }
+  constructor(public zone: NgZone, public renderer: Renderer2) {
+    this.loadingIndicationElement = this.renderer.createElement('div');
+    this.renderer.setStyle(this.loadingIndicationElement, 'text-align', 'center');
+    this.renderer.appendChild(this.loadingIndicationElement, this.renderer.createText('Loading more...'));
+  }
 
   ngAfterViewInit() {
     this.items = [];
@@ -55,7 +63,7 @@ export class DemoComponent implements AfterViewInit {
 
       if (length > 1000) this.infiniteScroll.disable();
       else this.infiniteScroll.complete();
-    }, 1000);
+    }, 100);
   }
 }
 
