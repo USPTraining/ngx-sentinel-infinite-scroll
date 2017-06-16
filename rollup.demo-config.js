@@ -3,7 +3,7 @@ import commonjs from 'rollup-plugin-commonjs';
 
 export default {
   format: 'umd',
-  moduleName: 'nginfinite-scroll',
+  moduleName: 'ngx-sentinel-infinite-scroll',
   plugins: [
     nodeResolve({ jsnext: true, main: true }),
     commonjs({

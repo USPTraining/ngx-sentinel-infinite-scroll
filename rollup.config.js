@@ -1,6 +1,6 @@
 export default {
   format: 'umd',
-  moduleName: 'nginfinite-scroll',
+  moduleName: 'ngx-sentinel-infinite-scroll',
   external: [
     '@angular/core',
     '@angular/common'
